@@ -21,7 +21,7 @@ class PermissionController extends Controller
      //This method will insert a permission in DB
     public function store(Request $request) {
         $validator = Validator::make($request->all(), [
-            'name'=> 'required|unique:permissions|min:3',
+            'name'=> 'required|unique:permissions,name|min:3'
         ]);
 
        if ($validator->passes()) {
@@ -30,6 +30,9 @@ class PermissionController extends Controller
             return redirect()->route('permissions.index')->with('success','Permission Added successfully.');
         }
         else {
+
+
+
             return redirect()->route('permissions.create')->withInput()->withErrors($validator);
         }
     }
