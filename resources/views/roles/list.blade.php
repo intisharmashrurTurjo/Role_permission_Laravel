@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div class="flex justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Permissions') }}
+                {{ __('Roles') }}
             </h2>
             <a class="bg-slate-700 text-sm rounded-md px-3 py-2 text-white"
-                href="{{ route('permissions.create') }}">Create</a>
+                href="{{ route('roles.create') }}">Create</a>
         </div>
     </x-slot>
 
@@ -18,25 +18,23 @@
                     <tr class="border-b">
                         <th class="px-6 py-3 text-left" width="60">#</th>
                         <th class="px-6 py-3 text-left">Name</th>
+                        <th class="px-6 py-3 text-left">Permission</th>
                         <th class="px-6 py-3 text-left" width="180">Created</th>
                         <th class="px-6 py-3 text-center" width="180">Action</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white">
-                    @if ($permissions->isNotEmpty())
-                        @foreach ($permissions as $permission)
+                    @if ($roles->isNotEmpty())
+                        @foreach ($roles as $role)
                             <tr class="border-b">
-                                <td class="px-6 py-3 text-left"> {{$permission->id}}</td>
-                                <td class="px-6 py-3 text-left">{{$permission->name}}</td>
-                                <td class="px-6 py-3 text-left">{{\Carbon\Carbon::parse($permission->created_at)->format('d M, Y')}}</td>
-                                <td class="px-6 py-3 text-center">
-                                    <a class="bg-blue-700 text-sm rounded-md px-3 py-2 text-white hover:bg-green-600"
-                                        href="{{ route('permissions.edit', $permission->id) }}">Edit</a>
-                                    <a class="bg-red-600 text-sm rounded-md px-3 py-2 text-white hover:bg-red-500"
-                                        href="javascript:void(0);" onclick="deletePermission({{ $permission->id }})">Delete</a>
-
-
+                                <td class="px-6 py-3 text-left"> {{$role->id}}</td>
+                                <td class="px-6 py-3 text-left">{{$role->name}}</td>
+                                <td class="px-6 py-3 text-left">
+                                    {{ method_exists($role, 'getPermissionNames') ? $role->getPermissionNames()->implode(', ') : ($role->permissions && $role->permissions->isNotEmpty() ? $role->permissions->pluck('name')->implode(', ') : '') }}
                                 </td>
+                                <td class="px-6 py-3 text-left">{{\Carbon\Carbon::parse($role->created_at)->format('d M, Y')}}</td>
+
+                                <td class="px-6 py-3 text-center"></td>
                             </tr>
                         @endforeach
 
@@ -46,7 +44,7 @@
             </table>
 
            <div class="my-3">
-             {{$permissions->links()}}
+          {{--    {{$permissions->links()}} --}}
            </div>
         </div>
     </div>
